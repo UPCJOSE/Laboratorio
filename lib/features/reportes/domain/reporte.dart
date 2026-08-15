@@ -19,14 +19,14 @@ class Reporte {
   });
 
   factory Reporte.fromJson(Map<String, dynamic> json) => Reporte(
-        id: leerTexto(json, 'id'),
-        titulo: leerTexto(json, 'titulo'),
-        descripcion: leerTexto(json, 'descripcion'),
-        ubicacion: Ubicacion.fromJson(leerMapa(json, 'ubicacion')),
-        creadoEn: leerFecha(json, 'creadoEn'),
-        estado: EstadoReporte.fromJson(leerMapa(json, 'estado')),
-        fotos: leerTextos(json, 'fotos'),
-      );
+    id: leerTexto(json, 'id'),
+    titulo: leerTexto(json, 'titulo'),
+    descripcion: leerTexto(json, 'descripcion'),
+    ubicacion: Ubicacion.fromJson(leerMapa(json, 'ubicacion')),
+    creadoEn: leerFecha(json, 'creadoEn'),
+    estado: EstadoReporte.fromJson(leerMapa(json, 'estado')),
+    fotos: leerTextos(json, 'fotos'),
+  );
 
   final String id;
   final String titulo;
@@ -37,14 +37,14 @@ class Reporte {
   final List<String> fotos;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'titulo': titulo,
-        'descripcion': descripcion,
-        'ubicacion': ubicacion.toJson(),
-        'creadoEn': creadoEn.toUtc().toIso8601String(),
-        'estado': estado.toJson(),
-        'fotos': fotos,
-      };
+    'id': id,
+    'titulo': titulo,
+    'descripcion': descripcion,
+    'ubicacion': ubicacion.toJson(),
+    'creadoEn': creadoEn.toUtc().toIso8601String(),
+    'estado': estado.toJson(),
+    'fotos': fotos,
+  };
 
   // ── Reglas de negocio ───────────────────────────────────────────────────
 
@@ -54,7 +54,8 @@ class Reporte {
 
   Duration antiguedad(DateTime ahora) => ahora.difference(creadoEn);
 
-  bool estaVencido(DateTime ahora) => antiguedad(ahora) > const Duration(days: 30);
+  bool estaVencido(DateTime ahora) =>
+      antiguedad(ahora) > const Duration(days: 30);
 
   // ── Copia ───────────────────────────────────────────────────────────────
 
@@ -64,16 +65,15 @@ class Reporte {
     Ubicacion? ubicacion,
     EstadoReporte? estado,
     List<String>? fotos,
-  }) =>
-      Reporte(
-        id: id,
-        titulo: titulo ?? this.titulo,
-        descripcion: descripcion ?? this.descripcion,
-        ubicacion: ubicacion ?? this.ubicacion,
-        creadoEn: creadoEn,
-        estado: estado ?? this.estado,
-        fotos: fotos ?? this.fotos,
-      );
+  }) => Reporte(
+    id: id,
+    titulo: titulo ?? this.titulo,
+    descripcion: descripcion ?? this.descripcion,
+    ubicacion: ubicacion ?? this.ubicacion,
+    creadoEn: creadoEn,
+    estado: estado ?? this.estado,
+    fotos: fotos ?? this.fotos,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -89,14 +89,14 @@ class Reporte {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        titulo,
-        descripcion,
-        ubicacion,
-        creadoEn,
-        estado,
-        Object.hashAll(fotos),
-      );
+    id,
+    titulo,
+    descripcion,
+    ubicacion,
+    creadoEn,
+    estado,
+    Object.hashAll(fotos),
+  );
 
   @override
   String toString() => 'Reporte($id, $titulo, ${estado.etiqueta})';

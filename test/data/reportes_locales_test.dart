@@ -26,7 +26,10 @@ void main() {
   test('busca por id y devuelve null cuando no está', () async {
     final repo = ReportesLocales(lector: (_) async => _json);
 
-    expect((await repo.obtenerPorId('rep-001'))?.titulo, 'Hueco en la carrera 19');
+    expect(
+      (await repo.obtenerPorId('rep-001'))?.titulo,
+      'Hueco en la carrera 19',
+    );
     expect(await repo.obtenerPorId('no-existe'), isNull);
   });
 
@@ -35,20 +38,26 @@ void main() {
     expect(repo.obtenerTodos(), throwsA(isA<CampoInvalido>()));
   });
 
-  test('el asset declarado en pubspec existe y el modelo lo entiende', () async {
-    TestWidgetsFlutterBinding.ensureInitialized();
+  test(
+    'el asset declarado en pubspec existe y el modelo lo entiende',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
 
-    final repo = ReportesLocales(lector: rootBundle.loadString);
-    expect((await repo.obtenerTodos()).length, greaterThanOrEqualTo(3));
-  });
+      final repo = ReportesLocales(lector: rootBundle.loadString);
+      expect((await repo.obtenerTodos()).length, greaterThanOrEqualTo(3));
+    },
+  );
 
-    test('obtenerPendientes devuelve solo los reportes en estado pendiente', () async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    final repo = ReportesLocales(lector: rootBundle.loadString);
+  test(
+    'obtenerPendientes devuelve solo los reportes en estado pendiente',
+    () async {
+      TestWidgetsFlutterBinding.ensureInitialized();
+      final repo = ReportesLocales(lector: rootBundle.loadString);
 
-    final pendientes = await repo.obtenerPendientes();
+      final pendientes = await repo.obtenerPendientes();
 
-    expect(pendientes, isNotEmpty);
-    expect(pendientes.every((r) => r.estado is Pendiente), isTrue);
-  });
+      expect(pendientes, isNotEmpty);
+      expect(pendientes.every((r) => r.estado is Pendiente), isTrue);
+    },
+  );
 }

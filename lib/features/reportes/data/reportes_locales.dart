@@ -28,7 +28,11 @@ class ReportesLocales implements ReportesRepository {
     final decodificado = jsonDecode(crudo);
 
     if (decodificado is! List) {
-      throw const CampoInvalido('(raíz)', 'el archivo debe contener una lista', null);
+      throw const CampoInvalido(
+        '(raíz)',
+        'el archivo debe contener una lista',
+        null,
+      );
     }
 
     return _cache = decodificado
@@ -45,7 +49,7 @@ class ReportesLocales implements ReportesRepository {
   }
 
   @override
-    Future<List<Reporte>> obtenerPendientes() async {
+  Future<List<Reporte>> obtenerPendientes() async {
     final todos = await obtenerTodos();
     return todos.where((r) => r.estado is Pendiente).toList();
   }

@@ -7,18 +7,18 @@ import 'package:laboratorio/features/reportes/domain/reporte.dart';
 import 'package:laboratorio/features/reportes/domain/ubicacion.dart';
 
 Reporte ejemplo({EstadoReporte? estado, List<String>? fotos}) => Reporte(
-      id: 'rep-001',
-      titulo: 'Hueco en la carrera 19',
-      descripcion: 'Medio metro frente al bloque C.',
-      ubicacion: const Ubicacion(
-        latitud: 10.4631,
-        longitud: -73.2532,
-        barrio: 'Centro',
-      ),
-      creadoEn: DateTime.utc(2026, 8, 10, 19, 5),
-      estado: estado ?? const Desconocido(),
-      fotos: fotos ?? const <String>[],
-    );
+  id: 'rep-001',
+  titulo: 'Hueco en la carrera 19',
+  descripcion: 'Medio metro frente al bloque C.',
+  ubicacion: const Ubicacion(
+    latitud: 10.4631,
+    longitud: -73.2532,
+    barrio: 'Centro',
+  ),
+  creadoEn: DateTime.utc(2026, 8, 10, 19, 5),
+  estado: estado ?? const Desconocido(),
+  fotos: fotos ?? const <String>[],
+);
 
 void main() {
   group('serialización', () {
@@ -29,7 +29,9 @@ void main() {
       );
 
       final texto = jsonEncode(original.toJson());
-      final vuelta = Reporte.fromJson(jsonDecode(texto) as Map<String, dynamic>);
+      final vuelta = Reporte.fromJson(
+        jsonDecode(texto) as Map<String, dynamic>,
+      );
 
       expect(vuelta, equals(original));
     });
@@ -44,9 +46,7 @@ void main() {
 
       expect(
         () => Reporte.fromJson(json),
-        throwsA(
-          isA<CampoInvalido>().having((e) => e.campo, 'campo', 'titulo'),
-        ),
+        throwsA(isA<CampoInvalido>().having((e) => e.campo, 'campo', 'titulo')),
       );
     });
 
@@ -72,7 +72,10 @@ void main() {
     });
 
     test('dos reportes con fotos distintas NO son iguales', () {
-      expect(ejemplo(fotos: const ['a']), isNot(equals(ejemplo(fotos: const ['b']))));
+      expect(
+        ejemplo(fotos: const ['a']),
+        isNot(equals(ejemplo(fotos: const ['b']))),
+      );
     });
 
     test('copyWith cambia solo lo que se le pasa', () {
@@ -87,11 +90,17 @@ void main() {
 
   group('reglas de negocio', () {
     test('un reporte en proceso no se puede editar', () {
-      expect(ejemplo(estado: const EnProceso('cuadrilla-3')).sePuedeEditar, isFalse);
+      expect(
+        ejemplo(estado: const EnProceso('cuadrilla-3')).sePuedeEditar,
+        isFalse,
+      );
     });
 
     test('un reporte pendiente sí se puede editar', () {
-      expect(ejemplo(estado: const Pendiente('5/10', 'cuadrilla-3')).sePuedeEditar, isTrue);
+      expect(
+        ejemplo(estado: const Pendiente('5/10', 'cuadrilla-3')).sePuedeEditar,
+        isTrue,
+      );
     });
 
     test('un reporte de hace 40 días está vencido', () {
@@ -100,10 +109,7 @@ void main() {
     });
 
     test('la etiqueta de un pendiente incluye la prioridad', () {
-      expect(
-        const Pendiente('5/10', 'cuadrilla-3').etiqueta,
-        contains('5/10'),
-      );
+      expect(const Pendiente('5/10', 'cuadrilla-3').etiqueta, contains('5/10'));
     });
   });
 }

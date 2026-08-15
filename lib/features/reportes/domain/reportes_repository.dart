@@ -5,6 +5,6 @@ abstract interface class ReportesRepository {
   Future<List<Reporte>> obtenerTodos();
 
   Future<Reporte?> obtenerPorId(String id);
-  
+
   Future<List<Reporte>> obtenerPendientes();
 }

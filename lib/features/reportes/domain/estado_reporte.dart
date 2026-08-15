@@ -9,61 +9,61 @@ import 'package:laboratorio/core/json.dart';
 sealed class EstadoReporte {
   const EstadoReporte();
 
-/// El ÚNICO sitio donde un texto del JSON se convierte en un tipo.
-    factory EstadoReporte.fromJson(Map<String, dynamic> json) {
+  /// El ÚNICO sitio donde un texto del JSON se convierte en un tipo.
+  factory EstadoReporte.fromJson(Map<String, dynamic> json) {
     final tipo = leerTexto(json, 'tipo');
     return switch (tipo) {
       'desconocido' => const Desconocido(),
       'pendiente' => Pendiente(
-          leerTexto(json, 'prioridad'),
-          leerTexto(json, 'asignadoA'),
-        ),
+        leerTexto(json, 'prioridad'),
+        leerTexto(json, 'asignadoA'),
+      ),
       'en_proceso' => EnProceso(leerTexto(json, 'asignadoA')),
       'resuelto' => Resuelto(
-          leerFecha(json, 'fechaCierre'),
-          leerTexto(json, 'verificadoPor'),
-        ),
+        leerFecha(json, 'fechaCierre'),
+        leerTexto(json, 'verificadoPor'),
+      ),
       _ => throw CampoInvalido('estado.tipo', 'no es un estado conocido', tipo),
     };
   }
 
   /// Y el único sitio donde vuelve a ser texto. Simétrico a fromJson: si
   /// añades un estado arriba y olvidas añadirlo aquí, esto no compila.
-  /// 
+  ///
   Map<String, dynamic> toJson() => switch (this) {
-      Desconocido() => {'tipo': 'desconocido'},
-      Pendiente(:final prioridad, :final asignadoA) => {
-          'tipo': 'pendiente',
-          'prioridad': prioridad,
-          'asignadoA': asignadoA,
-        },
-      EnProceso(:final asignadoA) => {
-          'tipo': 'en_proceso',
-          'asignadoA': asignadoA,
-        },
-      Resuelto(:final fechaCierre, :final verificadoPor) => {
-          'tipo': 'resuelto',
-          'fechaCierre': fechaCierre.toIso8601String(),
-          'verificadoPor': verificadoPor,
-        },
-        
-    };
+    Desconocido() => {'tipo': 'desconocido'},
+    Pendiente(:final prioridad, :final asignadoA) => {
+      'tipo': 'pendiente',
+      'prioridad': prioridad,
+      'asignadoA': asignadoA,
+    },
+    EnProceso(:final asignadoA) => {
+      'tipo': 'en_proceso',
+      'asignadoA': asignadoA,
+    },
+    Resuelto(:final fechaCierre, :final verificadoPor) => {
+      'tipo': 'resuelto',
+      'fechaCierre': fechaCierre.toIso8601String(),
+      'verificadoPor': verificadoPor,
+    },
+  };
 
   /// Regla de negocio, no de interfaz: quién puede tocar el reporte.
-  bool get sePuedeEditar => switch (this) {        // ← empieza un getter NUEVO, separado
-      Desconocido() || Pendiente() => true,
-      EnProceso() || Resuelto() => false,
-    };
+  bool get sePuedeEditar => switch (this) {
+    // ← empieza un getter NUEVO, separado
+    Desconocido() || Pendiente() => true,
+    EnProceso() || Resuelto() => false,
+  };
 
   /// Texto para la pantalla. En un proyecto con varios idiomas esto se va a
   /// la capa de presentación; con uno solo, aquí está bien y se prueba fácil.
-  
+
   String get etiqueta => switch (this) {
-      Desconocido() => 'Sin revisar',
-      Pendiente(:final prioridad) => 'Pendiente · prioridad $prioridad',
-      EnProceso(:final asignadoA) => 'En proceso · $asignadoA',
-      Resuelto(:final verificadoPor) => 'Resuelto por $verificadoPor',
-    };
+    Desconocido() => 'Sin revisar',
+    Pendiente(:final prioridad) => 'Pendiente · prioridad $prioridad',
+    EnProceso(:final asignadoA) => 'En proceso · $asignadoA',
+    Resuelto(:final verificadoPor) => 'Resuelto por $verificadoPor',
+  };
 }
 
 final class Desconocido extends EstadoReporte {
@@ -106,7 +106,8 @@ final class EnProceso extends EstadoReporte {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is EnProceso && other.asignadoA == asignadoA;
+      identical(this, other) ||
+      other is EnProceso && other.asignadoA == asignadoA;
 
   @override
   int get hashCode => Object.hash(runtimeType, asignadoA);
